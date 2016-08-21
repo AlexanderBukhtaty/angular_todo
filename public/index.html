@@ -3,11 +3,25 @@
   <head>
     <meta charset="utf-8">
     <title>SUPERCHARGED TODO LIST</title>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="scripts/app-module.js"></script>
   </head>
-  <h1>SUPERCHARGED TODO LIST</h1>
   <body ng-app="todos">
-
+    <div class="container">
+      <h1>SUPERCHARGED TODO LIST</h1>
+        <div ng-controller="todoCtrl">
+          <div class="list-group">
+            <button type="button" class="list-group-item" ng-repeat="task in todoList">{{task.content}} <span class="badge">{{task.tag}}</span></button>
+          </div>
+          <button type="button" class="btn btn-success btn-block">Add +</button>
+        </div>
+    </div>
+    <!--Модальные окна START-->
+    <!--Форма редактирования/добавления задачи-->
+    <!--Подтверждение действия-->
+    <!--Модальные окна END-->
   </body>
 </html>
