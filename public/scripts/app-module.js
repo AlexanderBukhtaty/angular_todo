@@ -1,5 +1,6 @@
 'use strict'
-//angular.module('todos', []);
+
+var app = angular.module('todos', []);
 
 var data = {
     tags: {
@@ -22,50 +23,58 @@ var data = {
     ]
 };
 
-var app = angular.module('todos', []);
-
-app.controller('todoCtrl', function($scope) {
+/****Контроллеры****/
+app.controller('todoCtrl', ['$scope','$http',function($scope,$http) {
     //Инициализация массива задач
-    $scope.todoList = data.todos;
-    $scope.todoInit = function() {
+    $http.get('api/v0/todos/items').success(function (data,status,headers,config) {
+        console.log('something went wrong!');
+        $scope.todoList = data.items;
+    }).error(function () {
+        console.log('something went wrong! when load todo-data');
+    });
+    $scope.todoGet = function() {
     };
     //Функция добавления задачи
     $scope.todoAdd = function() {
-        $scope.todoList.push({todoText:$scope.todoForm, done:false});
-        $scope.todoInput = "";
+        console.log('todoAdd');
+        //$scope.todoList.push({todoText:$scope.todoForm, done:false});
+        //$scope.todoInput = '';
     };
     //Функция удаления задачи
-    $scope.remove = function() {
-        var oldList = $scope.todoList;
-        $scope.todoList = [];
-        angular.forEach(oldList, function(x) {
-            if (!x.done) $scope.todoList.push(x);
-        });
+    $scope.todoRemove = function() {
+        console.log('todoRemove');
+        //var oldList = $scope.todoList;
+        //$scope.todoList = [];
+        //angular.forEach(oldList, function(x) {
+        //    if (!x.done) $scope.todoList.push(x);
+        //});
     };
     //Функция открывающая модальное окно задачи
+    $scope.openTodoModal = function (){
+        $('#todo-update-modal').modal('show');
+    }
     //Функция открывающая модальное окно подтверждения действия
-});
+}]);
 
-//*Фильры*//
+//**** Фильры ****//
 /* Фильтр соотношения номера тега и класса(css)
  * Применяется для того что бы классифицировать каждую лэйбу отдельным классом(цветом)
  */
 app.filter('badgeColor', function() {
     return function(input, optional1, optional2) {
-        console.log("badgeColor input type: "+ typeof(input));
         var output;
         switch (input){
             case 1:
-                output = "badge-primary";break;
+                output = 'badge-primary';break;
             case 2:
-                output = "badge-success";break;
+                output = 'badge-success';break;
             case 3:
-                output = "badge-info";break;
+                output = 'badge-info';break;
             case 4:
-                output = "badge-warning";break;
+                output = 'badge-warning';break;
             case 5:
-                output = "badge-danger";break;
-            default: output = "badge-default";
+                output = 'badge-danger';break;
+            default: output = 'badge-default';
         }
         return output;
     }
