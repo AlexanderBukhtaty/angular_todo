@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <!--Мета-->
     <meta charset="utf-8">
     <title>SUPERCHARGED TODO LIST</title>
+    <!--Стили-->
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <!--Скрипты-->
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="bower_components/angular/angular.js"></script>
@@ -14,7 +18,7 @@
       <h1>SUPERCHARGED TODO LIST</h1>
         <div ng-controller="todoCtrl">
           <div class="list-group">
-            <button type="button" class="list-group-item" ng-repeat="task in todoList">{{task.content}} <span class="badge">{{task.tag}}</span></button>
+            <button type="button" class="list-group-item" ng-repeat="task in todoList">{{task.content}} <span class="badge {{task.tag | badgeColor}}">{{task.tag}}</span></button>
           </div>
           <button type="button" class="btn btn-success btn-block">Add +</button>
         </div>
