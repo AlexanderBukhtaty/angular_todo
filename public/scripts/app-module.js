@@ -27,7 +27,6 @@ var data = {
 app.controller('todoCtrl', ['$scope','$http',function($scope,$http) {
     //Инициализация массива задач
     $http.get('api/v0/todos/items').success(function (data,status,headers,config) {
-        console.log('something went wrong!');
         $scope.todoList = data.items;
     }).error(function () {
         console.log('something went wrong! when load todo-data');
