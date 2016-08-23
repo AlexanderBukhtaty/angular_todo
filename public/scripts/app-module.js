@@ -22,9 +22,30 @@ var data = {
         {id: 10, tag: 2, content: 'challenge#10'}
     ]
 };
+/**** Сервисы ****/
+/* Сервис для работы с задачами
+ * */
+app.service('todosSrvc',function () {
+    this.get=function () {
+        console.log('todos.get');
+    };
+    this.save=function () {
+        console.log('todos.save');
+    };
+    this.remove=function () {
+        console.log('todos.remove');
+    };
+});
+/* Сервис для работы с тегами задач
+ * */
+app.service('tagsSrvc',function () {
+    this.get=function () {
+        console.log('tags.get');
+    };
+});
 
 /****Контроллеры****/
-app.controller('todoCtrl', ['$scope','$http',function($scope,$http) {
+app.controller('todoCtrl', ['$scope','$http','todosSrvc','tagsSrvc',function($scope,$http,todosSrvc,tagsSrvc) {
     //Инициализация массива задач
     $http.get('api/v0/todos/items').success(function (data,status,headers,config) {
         $scope.todoList = data.items;
@@ -34,14 +55,16 @@ app.controller('todoCtrl', ['$scope','$http',function($scope,$http) {
     $scope.todoGet = function() {
     };
     //Функция добавления задачи
-    $scope.todoAdd = function() {
-        console.log('todoAdd');
+    $scope.todoAddClick = function() {
+        //console.log('todoAdd');
+        todosSrvc.save();
         //$scope.todoList.push({todoText:$scope.todoForm, done:false});
         //$scope.todoInput = '';
     };
     //Функция удаления задачи
-    $scope.todoRemove = function() {
-        console.log('todoRemove');
+    $scope.todoRemoveClick = function() {
+        //console.log('todoRemove');
+        todosSrvc.remove();
         //var oldList = $scope.todoList;
         //$scope.todoList = [];
         //angular.forEach(oldList, function(x) {
@@ -53,9 +76,12 @@ app.controller('todoCtrl', ['$scope','$http',function($scope,$http) {
         $('#todo-update-modal').modal('show');
     }
     //Функция открывающая модальное окно подтверждения действия
+    $scope.openVerifyActionModal = function (){
+        $('#todo-update-modal').modal('show');
+    }
 }]);
 
-//**** Фильры ****//
+/****Фильры****/
 /* Фильтр соотношения номера тега и класса(css)
  * Применяется для того что бы классифицировать каждую лэйбу отдельным классом(цветом)
  */
