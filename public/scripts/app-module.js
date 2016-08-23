@@ -25,9 +25,22 @@ var data = {
 /**** Сервисы ****/
 /* Сервис для работы с задачами
  * */
-app.service('todosSrvc',function () {
+app.service('todosSrvc',['$http',function ($http) {
     this.get=function () {
         console.log('todos.get');
+        $http.get('api/v0/todos/items').then(
+            function successCallback(res) {
+                //$scope.todoList = $scope.todoList.concat(res.data.items);
+                /*if(!res.data.finish){
+                 successCallback();
+                 }*/
+                console.log('successCallback: ' + JSON.stringify(res.data));
+            },
+            function errorCallback(res) {
+                console.log('something went wrong! when load todo-data' + JSON.stringify(res));
+            }
+        );
+        return "response";
     };
     this.save=function () {
         console.log('todos.save');
@@ -35,25 +48,23 @@ app.service('todosSrvc',function () {
     this.remove=function () {
         console.log('todos.remove');
     };
-});
+}]);
 /* Сервис для работы с тегами задач
  * */
-app.service('tagsSrvc',function () {
+app.service('tagsSrvc',[function () {
     this.get=function () {
         console.log('tags.get');
     };
-});
+}]);
 
 /****Контроллеры****/
 app.controller('todoCtrl', ['$scope','$http','todosSrvc','tagsSrvc',function($scope,$http,todosSrvc,tagsSrvc) {
-    //Инициализация массива задач
-    $http.get('api/v0/todos/items').success(function (data,status,headers,config) {
-        $scope.todoList = data.items;
-    }).error(function () {
-        console.log('something went wrong! when load todo-data');
-    });
-    $scope.todoGet = function() {
+    $scope.todoList=[];
+    //Функция Инициализации массива задач
+    $scope.todoInit = function() {
+        console.log("todosSrvc.get " + todosSrvc.get());
     };
+    $scope.todoInit();
     //Функция добавления задачи
     $scope.todoAddClick = function() {
         //console.log('todoAdd');
@@ -81,7 +92,7 @@ app.controller('todoCtrl', ['$scope','$http','todosSrvc','tagsSrvc',function($sc
     }
 }]);
 
-/****Фильры****/
+/****Фильтры****/
 /* Фильтр соотношения номера тега и класса(css)
  * Применяется для того что бы классифицировать каждую лэйбу отдельным классом(цветом)
  */
@@ -103,5 +114,4 @@ app.filter('badgeColor', function() {
         }
         return output;
     }
-
 });
