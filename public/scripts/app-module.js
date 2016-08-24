@@ -2,51 +2,55 @@
 
 var app = angular.module('todos', []);
 
-var data = {
-    tags: {
-        1: '#низкий приоритет',
-        2: '#средний приоритет',
-        3: '#высокий приоритет',
-        4: '#АЛЯРМ!!!'
-    },
-    todos: [
-        {id: 1, tag: 2, content: 'challenge#1'},
-        {id: 2, tag: 5, content: 'challenge#2'},
-        {id: 3, tag: 2, content: 'challenge#3'},
-        {id: 4, tag: 3, content: 'challenge#4'},
-        {id: 5, tag: 1, content: 'challenge#5'},
-        {id: 6, tag: 4, content: 'challenge#6'},
-        {id: 7, tag: 1, content: 'challenge#7'},
-        {id: 8, tag: 4, content: 'challenge#8'},
-        {id: 9, tag: 3, content: 'challenge#9'},
-        {id: 10, tag: 2, content: 'challenge#10'}
-    ]
-};
 /**** Сервисы ****/
 /* Сервис для работы с задачами
  * */
 app.service('todosSrvc',['$http',function ($http) {
+    var data = {
+        tags: {
+            1: '#низкий приоритет',
+            2: '#средний приоритет',
+            3: '#высокий приоритет',
+            4: '#АЛЯРМ!!!'
+        },
+        todos: [
+            {id: 1, tag: 2, content: 'challenge#1'},
+            {id: 2, tag: 5, content: 'challenge#2'},
+            {id: 3, tag: 2, content: 'challenge#3'},
+            {id: 4, tag: 3, content: 'challenge#4'},
+            {id: 5, tag: 1, content: 'challenge#5'},
+            {id: 6, tag: 4, content: 'challenge#6'},
+            {id: 7, tag: 1, content: 'challenge#7'},
+            {id: 8, tag: 4, content: 'challenge#8'},
+            {id: 9, tag: 3, content: 'challenge#9'},
+            {id: 10, tag: 2, content: 'challenge#10'}
+        ]
+    };
     this.get=function () {
         console.log('todos.get');
+        /*
         $http.get('api/v0/todos/items').then(
             function successCallback(res) {
                 //$scope.todoList = $scope.todoList.concat(res.data.items);
-                /*if(!res.data.finish){
+                if(!res.data.finish){
                  successCallback();
-                 }*/
+                 }
                 console.log('successCallback: ' + JSON.stringify(res.data));
             },
             function errorCallback(res) {
                 console.log('something went wrong! when load todo-data' + JSON.stringify(res));
             }
         );
-        return "response";
+        */
+        return data.todos;
     };
     this.save=function () {
         console.log('todos.save');
+        data.todos.push({id: data.todos.length, tag: 2, content: 'challenge#saved'});
     };
-    this.remove=function () {
+    this.remove=function (id) {
         console.log('todos.remove');
+        data.todos.shift(id);
     };
 }]);
 /* Сервис для работы с тегами задач
@@ -59,28 +63,17 @@ app.service('tagsSrvc',[function () {
 
 /****Контроллеры****/
 app.controller('todoCtrl', ['$scope','$http','todosSrvc','tagsSrvc',function($scope,$http,todosSrvc,tagsSrvc) {
-    $scope.todoList=[];
-    //Функция Инициализации массива задач
-    $scope.todoInit = function() {
-        console.log("todosSrvc.get " + todosSrvc.get());
-    };
-    $scope.todoInit();
+    $scope.todoList = todosSrvc.get();
+    console.log("sss");
     //Функция добавления задачи
     $scope.todoAddClick = function() {
-        //console.log('todoAdd');
         todosSrvc.save();
-        //$scope.todoList.push({todoText:$scope.todoForm, done:false});
-        //$scope.todoInput = '';
+        $scope.todoList = todosSrvc.get();
     };
     //Функция удаления задачи
     $scope.todoRemoveClick = function() {
-        //console.log('todoRemove');
-        todosSrvc.remove();
-        //var oldList = $scope.todoList;
-        //$scope.todoList = [];
-        //angular.forEach(oldList, function(x) {
-        //    if (!x.done) $scope.todoList.push(x);
-        //});
+        todosSrvc.remove(id);
+        $scope.todoList = todosSrvc.get();
     };
     //Функция открывающая модальное окно задачи
     $scope.openTodoModal = function (){
@@ -92,7 +85,7 @@ app.controller('todoCtrl', ['$scope','$http','todosSrvc','tagsSrvc',function($sc
     }
 }]);
 
-/****Фильтры****/
+/**** Фильтры ****/
 /* Фильтр соотношения номера тега и класса(css)
  * Применяется для того что бы классифицировать каждую лэйбу отдельным классом(цветом)
  */
@@ -115,3 +108,5 @@ app.filter('badgeColor', function() {
         return output;
     }
 });
+
+/**** Директивы ****/
