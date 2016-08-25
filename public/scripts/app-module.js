@@ -7,12 +7,6 @@ var app = angular.module('todos', []);
  * */
 app.service('todosSrvc',['$http',function ($http) {
     var data = {
-        tags: {
-            1: '#низкий приоритет',
-            2: '#средний приоритет',
-            3: '#высокий приоритет',
-            4: '#АЛЯРМ!!!'
-        },
         todos: [
             {id: 1, tag: 2, content: 'challenge#1'},
             {id: 2, tag: 5, content: 'challenge#2'},
@@ -56,14 +50,24 @@ app.service('todosSrvc',['$http',function ($http) {
 /* Сервис для работы с тегами задач
  * */
 app.service('tagsSrvc',[function () {
+    var data = {
+        tags: [
+            {id:'1',label:'#низкий приоритет'},
+            {id:'2',label:'#средний приоритет'},
+            {id:'3',label:'#высокий приоритет'},
+            {id:'4',label:'#АЛЯРМ!!!'}
+        ]
+    };
     this.get=function () {
         console.log('tags.get');
+        return data.tags;
     };
 }]);
 
 /****Контроллеры****/
 app.controller('todoCtrl', ['$scope','$http','todosSrvc','tagsSrvc',function($scope,$http,todosSrvc,tagsSrvc) {
     $scope.todoList = todosSrvc.get();
+    $scope.tagsList = tagsSrvc.get();
     console.log("sss");
     //Функция добавления задачи
     $scope.todoAddClick = function() {
@@ -110,3 +114,36 @@ app.filter('badgeColor', function() {
 });
 
 /**** Директивы ****/
+app.directive('modal',function(){
+    return {
+        restrict: 'C',
+        // Этот HTML заменит директиву zippy.
+        replace: true,
+        transclude: true,
+        scope: { title:'@modalTitle' },
+        template: '<div>' +
+        '<div class="title">{{title}}</div>' +
+        '<div class="body" ng-transclude></div>' +
+        '</div>',
+        // Связующая функция добавит поведение к шаблону
+        link: function(scope, element, attrs) {
+            // Элемент заголовка
+            var title = angular.element(element.children()[0]),
+            // Состояние Opened / closed
+                opened = true;
+
+            // Клик по заголовку должен открыть/закрыть zippy
+            title.bind('click', toggle);
+
+            // Переключение состояния closed/opened
+            function toggle() {
+                opened = !opened;
+                element.removeClass(opened ? 'closed' : 'opened');
+                element.addClass(opened ? 'opened' : 'closed');
+            }
+
+            // инициализация zippy
+            toggle();
+        }
+    }
+});
