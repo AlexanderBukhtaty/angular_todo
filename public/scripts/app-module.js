@@ -50,12 +50,21 @@ app.service('todosSrvc',['$http',function ($http) {
 /* Сервис для работы с тегами задач
  * */
 app.service('tagsSrvc',[function () {
+    //Возможно надо дописать функцию приводящую значения с сервиса в вид ниже
+    /*
+     {
+         1: '#низкий приоритет',
+         2: '#средний приоритет',
+         3: '#высокий приоритет',
+         4: '#АЛЯРМ!!!'
+     }
+     */
     var data = {
         tags: [
-            {id:'1',label:'#низкий приоритет'},
-            {id:'2',label:'#средний приоритет'},
-            {id:'3',label:'#высокий приоритет'},
-            {id:'4',label:'#АЛЯРМ!!!'}
+            {id:'1',label:'Низкий приоритет'},
+            {id:'2',label:'Средний приоритет'},
+            {id:'3',label:'Высокий приоритет'},
+            {id:'4',label:'АЛЯРМ!!!'}
         ]
     };
     this.get=function () {
@@ -65,10 +74,14 @@ app.service('tagsSrvc',[function () {
 }]);
 
 /****Контроллеры****/
+//TODO нужно забандить изменения массивов что бы не вызывать геттеры каждый раз
 app.controller('todoCtrl', ['$scope','$http','todosSrvc','tagsSrvc',function($scope,$http,todosSrvc,tagsSrvc) {
     $scope.todoList = todosSrvc.get();
     $scope.tagsList = tagsSrvc.get();
-    console.log("sss");
+    $scope.currentTask={id: 1, tag: 2, content: 'challenge#1'};
+    $scope.todoClick = function(){
+
+    };
     //Функция добавления задачи
     $scope.todoAddClick = function() {
         todosSrvc.save();
@@ -114,36 +127,17 @@ app.filter('badgeColor', function() {
 });
 
 /**** Директивы ****/
+/*Модальные окна*/
 app.directive('modal',function(){
     return {
-        restrict: 'C',
-        // Этот HTML заменит директиву zippy.
-        replace: true,
-        transclude: true,
-        scope: { title:'@modalTitle' },
-        template: '<div>' +
-        '<div class="title">{{title}}</div>' +
-        '<div class="body" ng-transclude></div>' +
-        '</div>',
-        // Связующая функция добавит поведение к шаблону
-        link: function(scope, element, attrs) {
-            // Элемент заголовка
-            var title = angular.element(element.children()[0]),
-            // Состояние Opened / closed
-                opened = true;
-
-            // Клик по заголовку должен открыть/закрыть zippy
-            title.bind('click', toggle);
-
-            // Переключение состояния closed/opened
-            function toggle() {
-                opened = !opened;
-                element.removeClass(opened ? 'closed' : 'opened');
-                element.addClass(opened ? 'opened' : 'closed');
-            }
-
-            // инициализация zippy
-            toggle();
-        }
+        restrict: 'E',
+        // Этот HTML заменит директиву modal.
+        replace: false,
+        transclude: false,
+        scope: {
+            title:'@modalTitle',
+            //contentTemplateUlr:'@modalContentTemplateUrl'
+        },
+        templateUrl: 'templates/modal/task-form.html'
     }
 });

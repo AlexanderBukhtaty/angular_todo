@@ -18,59 +18,13 @@
       <h1>SUPERCHARGED TODO LIST</h1>
         <div>
           <div class="list-group">
-            <button type="button" class="list-group-item" ng-repeat="todo in todoList">{{todo.content}} <span class="badge {{todo.tag | badgeColor}}">{{todo.tag}}</span></button>
+            <button type="button" class="list-group-item" ng-repeat="todo in todoList" ng-click="tas">{{todo.content}} <span class="badge {{todo.tag | badgeColor}}">{{todo.tag}}</span></button>
           </div>
           <button type="button" class="btn btn-success btn-block" ng-click="openTodoModal()">Add +</button>
         </div>
     </div>
     <!--Модальные окна START-->
-    <!--Форма редактирования/добавления задачи-->
-    <div id="todo-update-modal" class="modal fade" tabindex="-1" role="dialog">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">Создание/Редактирование задачи</h4>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="form-group">
-                <label for="todo-content" class="control-label">Задача:</label>
-                <input type="text" class="form-control" id="todo-content" name="todo-content" ng-model="todoContent">
-              </div>
-              <div class="form-group">
-                <label for="todo-tag" class="control-label">Важность:</label>
-                <select class="form-control" id="todo-tag" name="todo-tag" ng-model="todoTag" ng-options="tag as tag.label for tag in tagsList track by tag.id"></select>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger pull-left" ng-click="todoRemoveClick()">Удалить</button>
-            <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-            <button type="button" class="btn btn-primary" ng-click="todoAddClick()">Создать/Сохранить</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!--Подтверждение действия-->
-    <div id="todo-remove-modal" class="modal fade" tabindex="-1" role="dialog">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">Удалинеи задачи</h4>
-          </div>
-          <div class="modal-body">
-            <p>Вы уверены что хоитите удалить задачу #{{taskID}}</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-            <button type="button" class="btn btn-success">Да</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <modal modal-title="Модальное окно"></modal>
     <!--Модальные окна END-->
-
   </body>
 </html>
