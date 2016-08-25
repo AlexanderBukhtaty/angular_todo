@@ -38,9 +38,10 @@ app.service('todosSrvc',['$http',function ($http) {
         */
         return data.todos;
     };
-    this.save=function () {
+    this.save=function (currentTask) {
         console.log('todos.save');
-        data.todos.push({id: data.todos.length, tag: 2, content: 'challenge#saved'});
+        currentTask.id = data.todos.length;
+        data.todos.push(currentTask);
     };
     this.remove=function (id) {
         console.log('todos.remove');
@@ -84,7 +85,7 @@ app.controller('todoCtrl', ['$scope','$http','todosSrvc','tagsSrvc',function($sc
     };
     //Функция добавления задачи
     $scope.todoAddClick = function() {
-        todosSrvc.save();
+        todosSrvc.save($scope.currentTask);
         $scope.todoList = todosSrvc.get();
     };
     //Функция удаления задачи
@@ -131,13 +132,12 @@ app.filter('badgeColor', function() {
 app.directive('modal',function(){
     return {
         restrict: 'E',
-        // Этот HTML заменит директиву modal.
         replace: false,
         transclude: false,
-        scope: {
+        /*scope: {
             title:'@modalTitle',
-            //contentTemplateUlr:'@modalContentTemplateUrl'
-        },
+            contentTemplateUlr:'@modalContentTemplateUrl'
+        },*/
         templateUrl: 'templates/modal/task-form.html'
     }
 });
