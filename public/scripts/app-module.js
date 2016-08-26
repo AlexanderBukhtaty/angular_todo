@@ -75,14 +75,11 @@ app.controller('todoCtrl', ['$scope','$http','todosSrvc','tagsSrvc',function($sc
         todosSrvc.remove(id);
         $scope.todoList = todosSrvc.get();
     };
-    //Функция открывающая модальное окно задачи
-    $scope.openTodoModal = function (){
-        $('#todo-update-modal').modal('show');
-    }
-    //Функция открывающая модальное окно подтверждения действия
-    $scope.openVerifyActionModal = function (){
-        $('#todo-update-modal').modal('show');
-    }
+    //Работа с модальным окном
+    $scope.modalShown = false;
+    $scope.toggleModal = function() {
+        $scope.modalShown = !$scope.modalShown;
+    };
 }]);
 
 /**** Фильтры ****/
@@ -110,3 +107,45 @@ app.filter('badgeColor', function() {
 });
 
 /**** Директивы ****/
+app.directive('modalDialog', function() {
+    return {
+        restrict: 'E',
+        scope: {
+            show: '='
+        },
+        replace: true,
+        transclude: true,
+        link: function(scope, element, attrs) {
+            scope.dialogStyle = {};
+            scope.hideModal = function() {
+                scope.show = false;
+            };
+        },
+        template: `<div id="todo-update-modal" class="modal fade" tabindex="-1" role="dialog">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Создание/Редактирование задачи</h4>
+                          </div>
+                          <div class="modal-body" ng-transclude>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-danger pull-left" ng-click="todoRemoveClick()">Удалить</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                            <button type="button" class="btn btn-primary" ng-click="todoAddClick()">Создать/Сохранить</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>`
+    };
+});
+/*
+ <div class='ng-modal' ng-show='show'>
+ <div class='ng-modal-overlay' ng-click='hideModal()'></div>
+ <div class='ng-modal-dialog' ng-style='dialogStyle'>
+ <div class='ng-modal-close' ng-click='hideModal()'>X</div>
+ <div class='ng-modal-dialog-content' ng-transclude></div>
+ </div>
+ </div>
+*/
