@@ -52,26 +52,37 @@ app.service('todosSrvc',['$http',function ($http) {
  * */
 app.service('tagsSrvc',[function () {
     //Возможно надо дописать функцию приводящую значения с сервиса в вид ниже
-    /*
-     [
-     {id:'1',label:'Низкий приоритет'},
-     {id:'2',label:'Средний приоритет'},
-     {id:'3',label:'Высокий приоритет'},
-     {id:'4',label:'АЛЯРМ!!!'}
-     ]
-     */
     var data = {
-        tags:{
-            1: '#низкий приоритет',
-            2: '#средний приоритет',
-            3: '#высокий приоритет',
-            4: '#АЛЯРМ!!!'
-        }
-    };
+      tags: [
+        {id:1,label:'Низкий приоритет'},
+        {id:2,label:'Средний приоритет'},
+        {id:3,label:'Высокий приоритет'},
+        {id:4,label:'АЛЯРМ!!!'}
+      ],
+      tagsObj: {
+          1: '#низкий приоритет',
+          2: '#средний приоритет',
+          3: '#высокий приоритет',
+          4: '#АЛЯРМ!!!'
+      },
+      tagsObj: {
+          1: {value: '#низкий приоритет', id: 1},
+          2: {value: '#средний приоритет', id: 2},
+          3: {value: '#высокий приоритет', id: 3},
+          4: {value: '#АЛЯРМ!!!', id: 4}
+      }
+    }
+    // var data = {
+    //     tags:
+    // };
     this.get=function () {
         console.log('tags.get');
         return data.tags;
     };
+
+    this.getObj = function() {
+      return data.tagsObj;
+    }
 }]);
 
 /****Контроллеры****/
@@ -79,7 +90,8 @@ app.service('tagsSrvc',[function () {
 app.controller('todoCtrl', ['$scope','$http','todosSrvc','tagsSrvc',function($scope,$http,todosSrvc,tagsSrvc) {
     $scope.todoList = todosSrvc.get();
     $scope.tagsList = tagsSrvc.get();
-    $scope.currentTask = {id: 0, tag: 1, content: 'Новая задача'};
+    $scope.tagsObj = tagsSrvc.getObj();
+    $scope.currentTask = {id: 0, tag: '1', content: 'Новая задача'};
     $scope.todoClick = function(todo){
         console.log('todoClick' + JSON.stringify(todo));
         $scope.currentTask = todo;
@@ -153,4 +165,3 @@ app.directive('modal',function(){
         }
     }
 });
-
