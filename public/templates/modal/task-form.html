@@ -18,7 +18,7 @@
                                 id="todo-tag"
                                 name="todo-tag"
                                 ng-model="currentTask.tag"
-                                ng-options="tag.id as tag.label for tag in tagsList track by tag.id"></select>
+                                ng-options="key as val for (key,val) in tagsList track by key"></select>
                     </div>
                 </form>
             </div>
