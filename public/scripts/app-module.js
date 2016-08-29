@@ -53,20 +53,20 @@ app.service('todosSrvc',['$http',function ($http) {
 app.service('tagsSrvc',[function () {
     //Возможно надо дописать функцию приводящую значения с сервиса в вид ниже
     /*
-     {
-         1: '#низкий приоритет',
-         2: '#средний приоритет',
-         3: '#высокий приоритет',
-         4: '#АЛЯРМ!!!'
-     }
+     [
+     {id:'1',label:'Низкий приоритет'},
+     {id:'2',label:'Средний приоритет'},
+     {id:'3',label:'Высокий приоритет'},
+     {id:'4',label:'АЛЯРМ!!!'}
+     ]
      */
     var data = {
-        tags: [
-            {id:'1',label:'Низкий приоритет'},
-            {id:'2',label:'Средний приоритет'},
-            {id:'3',label:'Высокий приоритет'},
-            {id:'4',label:'АЛЯРМ!!!'}
-        ]
+        tags:{
+            1: '#низкий приоритет',
+            2: '#средний приоритет',
+            3: '#высокий приоритет',
+            4: '#АЛЯРМ!!!'
+        }
     };
     this.get=function () {
         console.log('tags.get');
@@ -79,13 +79,16 @@ app.service('tagsSrvc',[function () {
 app.controller('todoCtrl', ['$scope','$http','todosSrvc','tagsSrvc',function($scope,$http,todosSrvc,tagsSrvc) {
     $scope.todoList = todosSrvc.get();
     $scope.tagsList = tagsSrvc.get();
-    $scope.currentTask={id: 1, tag: 2, content: 'challenge#1'};
-    $scope.todoClick = function(){
-
+    $scope.currentTask = {id: 0, tag: 1, content: 'Новая задача'};
+    $scope.todoClick = function(todo){
+        console.log('todoClick' + JSON.stringify(todo));
+        $scope.currentTask = todo;
+        $('#todo-update-modal').modal('show');
     };
     //Функция добавления задачи
     $scope.todoAddClick = function() {
         todosSrvc.save($scope.currentTask);
+        $scope.currentTask = {id: 0, tag: 1, content: 'Новая задача'};
         $scope.todoList = todosSrvc.get();
     };
     //Функция удаления задачи
@@ -99,7 +102,7 @@ app.controller('todoCtrl', ['$scope','$http','todosSrvc','tagsSrvc',function($sc
     }
     //Функция открывающая модальное окно подтверждения действия
     $scope.openVerifyActionModal = function (){
-        $('#todo-update-modal').modal('show');
+        $('#todo-verify-action-modal').modal('show');
     }
 }]);
 
@@ -110,7 +113,7 @@ app.controller('todoCtrl', ['$scope','$http','todosSrvc','tagsSrvc',function($sc
 app.filter('badgeColor', function() {
     return function(input, optional1, optional2) {
         var output;
-        switch (input){
+        switch (Number(input)){
             case 1:
                 output = 'badge-primary';break;
             case 2:
@@ -132,12 +135,21 @@ app.filter('badgeColor', function() {
 app.directive('modal',function(){
     return {
         restrict: 'E',
-        replace: false,
-        transclude: false,
-        /*scope: {
-            title:'@modalTitle',
-            contentTemplateUlr:'@modalContentTemplateUrl'
-        },*/
-        templateUrl: 'templates/modal/task-form.html'
+        replace: true,
+        transclude: true,
+        templateUrl: 'templates/modal/modalTemplate.html',
+        link:function(scope,element,attrs){
+            scope.modalTitle="hello people!!!";
+            /*
+            scope.modalOpen = function () {
+                console.log('Open function runned');
+                $('#'+attrs.id).modal('show');
+            };
+            scope.modalClose = function () {
+                console.log('Close function runned');
+                $('#'+attrs.id).modal('hide');
+            };
+            */
+        }
     }
 });
